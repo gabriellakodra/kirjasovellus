@@ -1,11 +1,19 @@
 <!doctype html>
 <html>
   <head>
-    <title>Etusivu</title>
+    <title>Julkaisut</title>
   </head>
 
   <body>
-    <h1>Etusivu</h1>
-    <p><b>Tervetuloa</b> <i>sovellukseen</i>!</p>
+    <p>Julkaisujen määrä: {{ count }}</p>
+    <hr />
+    {% for post in posts %}
+    <p>{{ post[0] }}</p>
+    <hr />
+    {% endfor %}
+
+    <p>
+      <a href="/new">Tee julkaisu</a>
+    </p>
   </body>
 </html>
