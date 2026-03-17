@@ -1,10 +1,18 @@
 from flask import Flask
 from flask import redirect, render_template, request
 import sqlite3
-from werkseug.security import generate_password_hash
+from werkzeug.security import generate_password_hash
 import db
 
+
 app = Flask(__name__)
+
+
+@app.route("/")
+def index():
+    posts = db.query("SELECT content FROM posts")
+    count = len(posts)
+    return render_template("index.html", count=count, posts=posts)
 
 
 @app.route("/register")
@@ -30,15 +38,6 @@ def create():
     return "Tunnus luotu"
 
 
-@app.route("/")
-def index():
-    db = sqlite3.connect("database.db")
-    posts = db.execute("SELECT content FROM posts").fetchall()
-    db.close()
-    count = len(posts)
-    return render_template("index.html", count=count, posts=posts)
-
-
 @app.route("/new")
 def new():
     return render_template("new.html")
@@ -47,10 +46,7 @@ def new():
 @app.route("/send", methods=["POST"])
 def send():
     content = request.form["content"]
-    db = sqlite3.connect("database.db")
     db.execute("INSERT INTO posts (content) VALUES (?)", [content])
-    db.commit()
-    db.close()
     return redirect("/")
 
 
@@ -63,13 +59,3 @@ def form():
 def result():
     message = request.form["message"]
     return render_template("result.html", message=message)
-
-
-@app.route("/page1")
-def page1():
-    return "Tämä on sivu 1"
-
-
-@app.route("/page2")
-def page2():
-    return "Tämä on sivu 2"
