@@ -1,11 +1,11 @@
-from flask import Flask
+from flask import Flask, session
 from flask import redirect, render_template, request
-import sqlite3
+import sqlite3, db, config
 from werkzeug.security import generate_password_hash
-import db
 
 
 app = Flask(__name__)
+app.secret_key = config.secret_key
 
 
 @app.route("/")
