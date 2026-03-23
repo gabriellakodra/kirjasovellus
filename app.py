@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import redirect, render_template, request, session
-import sqlite3, db, config
+import sqlite3, db, config, forum
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -10,7 +10,7 @@ app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-    posts = db.query("SELECT content FROM posts")
+    posts = forum.get_posts()
     count = len(posts)
     return render_template("index.html", count=count, posts=posts)
 
