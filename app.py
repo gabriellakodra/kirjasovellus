@@ -1,7 +1,7 @@
-from flask import Flask, session
-from flask import redirect, render_template, request
+from flask import Flask
+from flask import redirect, render_template, request, session
 import sqlite3, db, config
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
@@ -36,6 +36,27 @@ def create():
         return "VIRHE: tunnus on jo varattu"
 
     return "Tunnus luotu"
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    username = request.form["username"]
+    password = request.form["password"]
+
+    sql = "SELECT password_hash FROM users WHERE username = ?"
+    password_hash = db.query(sql, [username])[0][0]
+
+    if check_password_hash(password_hash, password):
+        session["username"] = username
+        return redirect("/")
+    else:
+        return "VIRHE: väärä tunnus tai salasana"
+
+
+@app.route("/logout")
+def logout():
+    del session["username"]
+    return redirect("/")
 
 
 @app.route("/new")
