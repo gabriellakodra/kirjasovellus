@@ -42,7 +42,7 @@ def create():
 def login():
     if request.method == "GET":
         return render_template("login.html")
-    
+
     username = request.form["username"]
     password = request.form["password"]
 
@@ -74,7 +74,7 @@ def send():
     title = request.form["title"]
     content = request.form["content"]
     user_id = session.get("user_id")
-    
+
     post_id = forum.add_post(title, content, user_id)
     return redirect("/post/" + str(post_id))
 
@@ -88,3 +88,20 @@ def form():
 def result():
     message = request.form["message"]
     return render_template("result.html", message=message)
+
+
+@app.route("/post/<int:post_id>")
+def show_post(post_id):
+    post = forum.get_post(post_id)
+    comments = forum.get_comments(post_id)
+    return render_template("post.html", post=post, comments=comments)
+
+
+@app.route("/new_comment", methods=["POST"])
+def new_comment():
+    content = request.form["content"]
+    post_id = request.form["post_id"]
+    user_id = session.get("user_id")
+
+    forum.add_comment(content, post_id, user_id)
+    return redirect("/post/" + str(post_id))
