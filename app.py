@@ -71,12 +71,9 @@ def new():
 
 @app.route("/send", methods=["POST"])
 def send():
-    if "user_id" not in session:
-        return "VIRHE: sinun täytyy olla kirjautunut"
-    
     title = request.form["title"]
     content = request.form["content"]
-    user_id = session["user_id"]
+    user_id = session.get("user_id")
 
     post_id = forum.add_post(title, content, user_id)
     return redirect("/post/" + str(post_id))
@@ -108,3 +105,16 @@ def new_comment():
 
     forum.add_comment(content, post_id, user_id)
     return redirect("/post/" + str(post_id))
+
+
+@app.route("/edit/<int:comment_id>", methods=["GET", "POST"])
+def edit_comment(comment_id):
+    comment = forum.get_comment(comment_id)
+
+    if request.method == "GET":
+        return render_template("edit.html", comment=comment)
+
+    if request.method == "POST":
+        content = request.form["content"]
+        forum.update_comment(comment_id, content)
+        return redirect("/post/" + str(comment[2]))
