@@ -5,7 +5,17 @@
   </head>
 
   <body>
-    <p>Julkaisujen määrä: {{ count }}</p>
+    <h1>Julkaisut</h1>
+    <h2>Julkaisujen määrä: {{ count }}</h2>
+
+    <p>
+      <a href="/register">Luo tunnus</a> | {% if session.user_id %}
+      <a href="/logout">Kirjaudu ulos</a>
+      {% else %}
+      <a href="/login">Kirjaudu sisään</a>
+      {% endif %}
+    </p>
+
     <hr />
     {% for post in posts %}
     <p>
@@ -14,37 +24,16 @@
       {{ post.total }} viestiä, uusin {{ post.last }}
     </p>
     <hr />
-    {% endfor %}
-
-    <p>
-      <a href="/new">Tee julkaisu</a>
-    </p>
-  </body>
-</html>
-
-<!doctype html>
-<html>
-  <head>
-    <title>Kirjautuminen</title>
-  </head>
-
-  <body>
-    {% if session.username %}
-    <p>Olet kirjautunut nimellä {{ session.username }}</p>
-    <p>
-      <a href="/logout">Kirjaudu ulos</a>
-    </p>
-    {% else %}
-    <form action="/login" method="post">
+    {% endfor %} {% if session.user_id %}
+    <h2>Uusi julkaisu</h2>
+    <form action="/send" method="post">
       <p>
-        Tunnus: <br />
-        <input type="text" name="username" />
+        Julkaisu: <br />
+        <textarea name="title" rows="3" cols="40"></textarea>
       </p>
       <p>
-        Salasana: <br />
-        <input type="password" name="password" />
+        <input type="submit" value="Lähetä" />
       </p>
-      <input type="submit" value="Kirjaudu" />
     </form>
     {% endif %}
   </body>
