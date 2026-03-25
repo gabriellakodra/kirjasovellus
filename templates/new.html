@@ -6,6 +6,7 @@
 
   <body>
     <h1>Uusi julkaisu:</h1>
+    {% if session.user_id %}
     <form action="/send" method="post">
       <p>
         Otsikko: <br />
@@ -19,5 +20,6 @@
         <input type="submit" value="Lähetä" />
       </p>
     </form>
+    {% endif %}
   </body>
 </html>

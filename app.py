@@ -71,9 +71,12 @@ def new():
 
 @app.route("/send", methods=["POST"])
 def send():
+    if "user_id" not in session:
+        return "VIRHE: sinun täytyy olla kirjautunut"
+    
     title = request.form["title"]
     content = request.form["content"]
-    user_id = session.get("user_id")
+    user_id = session["user_id"]
 
     post_id = forum.add_post(title, content, user_id)
     return redirect("/post/" + str(post_id))

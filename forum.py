@@ -11,7 +11,7 @@ def get_posts():
 
 
 def get_post(post_id):
-    sql = "SELECT id, title FROM posts WHERE id = ?"
+    sql = "SELECT id, title, content FROM posts WHERE id = ?"
     return db.query(sql, [post_id])[0]
 
 
@@ -24,11 +24,12 @@ def get_comments(post_id):
 
 
 def add_post(title, content, user_id):
-    sql = "INSERT INTO posts (title, user_id) VALUES (?, ?)"
-    db.execute(sql, [title, user_id])
+    sql = "INSERT INTO posts (title, content, user_id) VALUES (?, ?, ?)"
+    db.execute(sql, [title, content, user_id])
     return db.last_insert_id()
 
+def add_comment(content, user_id, post_id):
+    sql = """INSERT INTO comments (content, sent_at, user_id, post_id) VALUES
+             (?, datetime('now'), ?, ?)"""
+    db.execute(sql, [content, user_id, post_id])
 
-def add_comment(content, post_id, user_id):
-    sql = "INSERT INTO comments (content, post_id, user_id, sent_at) VALUES (?, ?, ?, datetime('now'))"
-    db.execute(sql, [content, post_id, user_id])
