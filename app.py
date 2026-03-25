@@ -66,8 +66,8 @@ def new():
 
 @app.route("/send", methods=["POST"])
 def send():
-    content = request.form["content"]
-    db.execute("INSERT INTO posts (content) VALUES (?)", [content])
+    title = request.form["title"]
+    db.execute("INSERT INTO posts (title) VALUES (?)", [title])
     return redirect("/")
 
 

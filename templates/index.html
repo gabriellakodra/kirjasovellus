@@ -7,11 +7,11 @@
   <body>
     <p>Julkaisujen määrä: {{ count }}</p>
     <hr />
-    {% for thread in threads %}
+    {% for post in posts %}
     <p>
-      <a href="/thread/{{ thread.id }}">{{ thread.title }}</a>
+      <a href="/post/{{ post.id }}">{{ post.title }}</a>
       <br />
-      {{ thread.total }} viestiä, uusin {{ thread.last }}
+      {{ post.total }} viestiä, uusin {{ post.last }}
     </p>
     <hr />
     {% endfor %}
