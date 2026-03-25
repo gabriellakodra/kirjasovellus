@@ -46,11 +46,13 @@ def login():
     username = request.form["username"]
     password = request.form["password"]
 
-    sql = "SELECT password_hash FROM users WHERE username = ?"
-    password_hash = db.query(sql, [username])[0][0]
+    sql = "SELECT id, password_hash FROM users WHERE username = ?"
+    result = db.query(sql, [username])[0]
+    user_id = result[0]
+    password_hash = result[1]
 
     if check_password_hash(password_hash, password):
-        session["username"] = username
+        session["user_id"] = user_id
         return redirect("/")
     else:
         return "VIRHE: väärä tunnus tai salasana"
@@ -58,7 +60,7 @@ def login():
 
 @app.route("/logout")
 def logout():
-    del session["username"]
+    del session["user_id"]
     return redirect("/")
 
 
@@ -70,8 +72,11 @@ def new():
 @app.route("/send", methods=["POST"])
 def send():
     title = request.form["title"]
-    db.execute("INSERT INTO posts (title) VALUES (?)", [title])
-    return redirect("/")
+    content = request.form["content"]
+    user_id = session.get("user_id")
+    
+    post_id = forum.add_post(title, content, user_id)
+    return redirect("/post/" + str(post_id))
 
 
 @app.route("/form")

@@ -8,3 +8,9 @@ def get_posts():
              GROUP BY p.id
              ORDER BY p.id DESC"""
     return db.query(sql)
+
+
+def add_post(title, content, user_id):
+    sql = "INSERT INTO posts (title, user_id) VALUES (?, ?)"
+    db.execute(sql, [title, user_id])
+    return db.last_insert_id()
