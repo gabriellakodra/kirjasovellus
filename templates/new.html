@@ -5,10 +5,15 @@
   </head>
 
   <body>
+    <h1>Uusi julkaisu:</h1>
     <form action="/send" method="post">
       <p>
+        Otsikko: <br />
+        <input type="text" name="title" />
+      </p>
+      <p>
         Julkaisu: <br />
-        <textarea name="title" rows="3" cols="40"></textarea>
+        <textarea name="content" rows="5" cols="40"></textarea>
       </p>
       <p>
         <input type="submit" value="Lähetä" />
