@@ -79,17 +79,6 @@ def send():
     return redirect("/post/" + str(post_id))
 
 
-@app.route("/form")
-def form():
-    return render_template("form.html")
-
-
-@app.route("/result", methods=["POST"])
-def result():
-    message = request.form["message"]
-    return render_template("result.html", message=message)
-
-
 @app.route("/post/<int:post_id>")
 def show_post(post_id):
     post = forum.get_post(post_id)
