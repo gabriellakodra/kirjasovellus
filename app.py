@@ -82,6 +82,8 @@ def send():
 @app.route("/post/<int:post_id>")
 def show_post(post_id):
     post = forum.get_post(post_id)
+    if not post:
+        abort(404)
     comments = forum.get_comments(post_id)
     return render_template("post.html", post=post, comments=comments)
 
@@ -92,7 +94,15 @@ def new_comment():
     post_id = request.form["post_id"]
     user_id = session.get("user_id")
 
+    post = forum.get_post(post_id)
+    if not post:
+        abort(404)
     forum.add_comment(content, user_id, post_id)
+
+    try:
+        forum.add_comment(content, user_id, post_id)
+    except sqlite3.IntegrityError:
+        abort(403)
     return redirect("/post/" + str(post_id))
 
 
