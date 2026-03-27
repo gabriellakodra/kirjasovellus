@@ -51,3 +51,17 @@ def update_comment(comment_id, content):
 def remove_comment(comment_id):
     sql = "DELETE FROM comments WHERE id = ?"
     db.execute(sql, [comment_id])
+
+
+def search(query):
+    sql = """SELECT c.id comment_id,
+                    c.post_id,
+                    p.title post_title,
+                    c.sent_at,
+                    u.username
+             FROM posts p, comments c, users u
+             WHERE p.id = c.post_id AND
+                   u.id = c.user_id AND
+                   c.content LIKE ?
+             ORDER BY c.sent_at DESC"""
+    return db.query(sql, ["%" + query + "%"])

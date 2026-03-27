@@ -149,3 +149,10 @@ def remove_comment(comment_id):
 def require_login():
     if "user_id" not in session:
         abort(403)
+
+
+@app.route("/search")
+def search():
+    query = request.args.get("query")
+    results = forum.search(query) if query else []
+    return render_template("search.html", query=query, results=results)
