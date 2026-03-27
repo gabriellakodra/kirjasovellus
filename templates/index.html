@@ -19,7 +19,7 @@
     <hr />
     {% for post in posts %}
     <p>
-      <a href="/post/{{ post.id }}">{{ post.title }}</a>
+      <a href="/post/{{ post.id }}#{{post.id}}">{{ post.title }}</a>
       <br />
       {{ post.total }} viestiä, uusin {{ post.last }}
     </p>
