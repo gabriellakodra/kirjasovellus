@@ -66,11 +66,13 @@ def logout():
 
 @app.route("/new")
 def new():
+    require_login()
     return render_template("new.html")
 
 
 @app.route("/send", methods=["POST"])
 def send():
+    require_login()
     title = request.form["title"]
     content = request.form["content"]
     user_id = session.get("user_id")
@@ -90,9 +92,11 @@ def show_post(post_id):
 
 @app.route("/new_comment", methods=["POST"])
 def new_comment():
+    require_login()
+
     content = request.form["content"]
     post_id = request.form["post_id"]
-    user_id = session.get("user_id")
+    user_id = session["user_id"]
 
     post = forum.get_post(post_id)
     if not post:
@@ -108,6 +112,8 @@ def new_comment():
 
 @app.route("/edit/<int:comment_id>", methods=["GET", "POST"])
 def edit_comment(comment_id):
+    require_login()
+
     comment = forum.get_comment(comment_id)
     if comment["user_id"] != session["user_id"]:
         abort(403)
@@ -123,6 +129,8 @@ def edit_comment(comment_id):
 
 @app.route("/remove/<int:comment_id>", methods=["GET", "POST"])
 def remove_comment(comment_id):
+    require_login()
+
     comment = forum.get_comment(comment_id)
     if comment["user_id"] != session["user_id"]:
         abort(403)
@@ -134,3 +142,8 @@ def remove_comment(comment_id):
         if "continue" in request.form:
             forum.remove_comment(comment["id"])
         return redirect("/post/" + str(comment["post_id"]))
+
+
+def require_login():
+    if "user_id" not in session:
+        abort(403)
