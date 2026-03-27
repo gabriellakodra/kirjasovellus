@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, abort
 from flask import redirect, render_template, request, session
 import sqlite3, db, config, forum
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -99,6 +99,8 @@ def new_comment():
 @app.route("/edit/<int:comment_id>", methods=["GET", "POST"])
 def edit_comment(comment_id):
     comment = forum.get_comment(comment_id)
+    if comment["user_id"] != session["user_id"]:
+        abort(403)
 
     if request.method == "GET":
         return render_template("edit.html", comment=comment)
@@ -112,6 +114,8 @@ def edit_comment(comment_id):
 @app.route("/remove/<int:comment_id>", methods=["GET", "POST"])
 def remove_comment(comment_id):
     comment = forum.get_comment(comment_id)
+    if comment["user_id"] != session["user_id"]:
+        abort(403)
 
     if request.method == "GET":
         return render_template("remove.html", comment=comment)
