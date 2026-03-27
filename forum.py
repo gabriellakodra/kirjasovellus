@@ -47,11 +47,6 @@ def update_comment(comment_id, content):
     db.execute(sql, [content, comment_id])
 
 
-def delete_comment(comment_id):
-    sql = "DELETE FROM comments WHERE id = ?"
-    db.execute(sql, [comment_id])
-
-
 def remove_comment(comment_id):
     sql = "DELETE FROM comments WHERE id = ?"
     db.execute(sql, [comment_id])
