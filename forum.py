@@ -12,7 +12,8 @@ def get_posts():
 
 def get_post(post_id):
     sql = "SELECT id, title, content FROM posts WHERE id = ?"
-    return db.query(sql, [post_id])[0]
+    result = db.query(sql, [post_id])
+    return result[0] if result else None
 
 
 def get_comments(post_id):

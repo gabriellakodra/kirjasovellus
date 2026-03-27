@@ -10,11 +10,11 @@
     <form action="/send" method="post">
       <p>
         Otsikko: <br />
-        <input type="text" name="title" />
+        <input type="text" name="title" maxlength="100" required />
       </p>
       <p>
         Julkaisu: <br />
-        <textarea name="content" rows="5" cols="40"></textarea>
+        <textarea name="content" rows="5" cols="40" maxlength="5000"></textarea>
       </p>
       <p>
         <input type="submit" value="Lähetä" />

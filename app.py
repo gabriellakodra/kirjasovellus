@@ -75,6 +75,8 @@ def send():
     require_login()
     title = request.form["title"]
     content = request.form["content"]
+    if not title or len(title) > 100 or len(content) > 5000:
+        abort(403)
     user_id = session.get("user_id")
 
     post_id = forum.add_post(title, content, user_id)
