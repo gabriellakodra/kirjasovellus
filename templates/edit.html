@@ -1,7 +1,11 @@
+{% block title %}Muokkaa kommenttia{% endblock %} {% block content %}
+
+<h2>Kommentin muokkaus</h2>
+
 <form action="/edit/{{ comment.id }}" method="post">
   <p>
     Kommentti:<br />
-    <textarea name="content" rows="5" cols="40">{{ comment.content }}</textarea>
+    <textarea name="content" rows="5" cols="40" maxlenght="5000">{{ comment.content }}</textarea>
   </p>
   <input type="submit" value="Lähetä" />
 </form>
