@@ -1,6 +1,6 @@
 from flask import Flask, abort
 from flask import redirect, render_template, request, session
-import sqlite3, db, config, forum
+import config, db, forum
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -29,11 +29,9 @@ def create():
         return "VIRHE: salasanat eivät ole samat"
     password_hash = generate_password_hash(password1)
 
-    try:
-        sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-        db.execute(sql, [username, password_hash])
-    except sqlite3.IntegrityError:
-        return "VIRHE: tunnus on jo varattu"
+    error = forum.create_user(username, password_hash)
+    if error:
+        return error
 
     return "Tunnus luotu"
 

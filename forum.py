@@ -1,4 +1,5 @@
 import db
+import sqlite3
 
 
 def get_posts():
@@ -75,3 +76,12 @@ def search(query):
                    c.content LIKE ?
              ORDER BY c.sent_at DESC"""
     return db.query(sql, ["%" + query + "%"])
+
+
+def create_user(username, password_hash):
+    sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
+    try:
+        db.execute(sql, [username, password_hash])
+        return None
+    except sqlite3.IntegrityError:
+        return "VIRHE: tunnus on jo varattu"
