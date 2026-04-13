@@ -11,7 +11,7 @@ def get_posts():
 
 
 def get_post(post_id):
-    sql = "SELECT id, title, content FROM posts WHERE id = ?"
+    sql = "SELECT id, title, content, user_id FROM posts WHERE id = ?"
     result = db.query(sql, [post_id])
     return result[0] if result else None
 
@@ -51,6 +51,16 @@ def update_comment(comment_id, content):
 def remove_comment(comment_id):
     sql = "DELETE FROM comments WHERE id = ?"
     db.execute(sql, [comment_id])
+
+
+def update_post(post_id, title, content):
+    sql = "UPDATE posts SET title = ?, content = ? WHERE id = ?"
+    db.execute(sql, [title, content, post_id])
+
+
+def remove_post(post_id):
+    sql = "DELETE FROM posts WHERE id = ?"
+    db.execute(sql, [post_id])
 
 
 def search(query):

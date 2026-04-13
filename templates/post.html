@@ -10,6 +10,12 @@
   <body>
     <h1>{{ post.title }}</h1>
     <p>{{ post.content }}</p>
+    {% if post.user_id == session.user_id %}
+    <p>
+      <a href="/edit_post/{{ post.id }}">Muokkaa</a> |
+      <a href="/remove_post/{{ post.id }}">Poista</a>
+    </p>
+    {% endif %}
 
     <hr />
     {% for comment in comments %}

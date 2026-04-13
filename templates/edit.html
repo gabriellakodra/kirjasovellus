@@ -1,9 +1,22 @@
-<h2>Kommentin muokkaus</h2>
+<h2>{% if post %}Julkaisun muokkaus{% else %}Kommentin muokkaus{% endif %}</h2>
 
 <p>
   <a href="/">Etusivulle</a>
 </p>
 
+{% if post %}
+<form action="/edit_post/{{ post.id }}" method="post">
+  <p>
+    Otsikko:<br />
+    <input type="text" name="title" maxlength="100" value="{{ post.title }}" />
+  </p>
+  <p>
+    Julkaisu:<br />
+    <textarea name="content" rows="5" cols="40" maxlength="5000">{{ post.content }}</textarea>
+  </p>
+  <input type="submit" value="Lähetä" />
+</form>
+{% else %}
 <form action="/edit/{{ comment.id }}" method="post">
   <p>
     Kommentti:<br />
@@ -11,3 +24,4 @@
   </p>
   <input type="submit" value="Lähetä" />
 </form>
+{% endif %}

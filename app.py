@@ -146,6 +146,48 @@ def remove_comment(comment_id):
         return redirect("/post/" + str(comment["post_id"]))
 
 
+@app.route("/edit_post/<int:post_id>", methods=["GET", "POST"])
+def edit_post(post_id):
+    require_login()
+
+    post = forum.get_post(post_id)
+    if not post:
+        abort(404)
+    if post["user_id"] != session["user_id"]:
+        abort(403)
+
+    if request.method == "GET":
+        return render_template("edit.html", post=post)
+
+    if request.method == "POST":
+        title = request.form["title"]
+        content = request.form["content"]
+        if not title or len(title) > 100 or len(content) > 5000:
+            abort(403)
+        forum.update_post(post_id, title, content)
+        return redirect("/post/" + str(post_id))
+
+
+@app.route("/remove_post/<int:post_id>", methods=["GET", "POST"])
+def remove_post(post_id):
+    require_login()
+
+    post = forum.get_post(post_id)
+    if not post:
+        abort(404)
+    if post["user_id"] != session["user_id"]:
+        abort(403)
+
+    if request.method == "GET":
+        return render_template("remove.html", post=post)
+
+    if request.method == "POST":
+        if "continue" in request.form:
+            forum.remove_post(post_id)
+            return redirect("/")
+        return redirect("/post/" + str(post_id))
+
+
 def require_login():
     if "user_id" not in session:
         abort(403)
