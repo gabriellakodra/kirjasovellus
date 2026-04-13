@@ -10,9 +10,13 @@ app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
+    query = request.args.get("query")
+    if query:
+        results = forum.search(query)
+        return render_template("index.html", query=query, results=results, posts=None)
     posts = forum.get_posts()
     count = len(posts)
-    return render_template("index.html", count=count, posts=posts)
+    return render_template("index.html", count=count, posts=posts, query=None, results=[])
 
 
 @app.route("/register")

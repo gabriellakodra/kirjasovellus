@@ -5,21 +5,57 @@
   </head>
 
   <body>
-    <h1>Julkaisut</h1>
-    <h2>Julkaisujen määrä: {{ count }}</h2>
+    {% if not query %}
+    <h1>Julkaisut: {{ count }}</h1>
+    {% endif %}
 
     <p>
-      {% if not session.user_id %}<a href="/register">Luo tunnus</a> | {% endif %}{% if session.user_id %}<a href="/logout">Kirjaudu ulos</a> | <a href="/new">Tee uusi julkaisu</a>{% else %}<a href="/login">Kirjaudu sisään</a>{% endif %} | <a href="/search">Haku</a>
+      <a href="/">Etusivu</a> | {% if not session.user_id %}<a href="/register">Luo tunnus</a> | {%
+      endif %}{% if session.user_id %}<a href="/logout">Kirjaudu ulos</a> |
+      <a href="/new">Tee uusi julkaisu</a>{% else %}<a href="/login">Kirjaudu sisään</a>{% endif %}
     </p>
 
     <hr />
-    {% for post in posts %}
+
+    <form action="/" method="get">
+      <p>
+        Hakusana: {% if query %}
+        <input type="text" name="query" value="{{ query }}" />
+        {% else %}
+        <input type="text" name="query" />
+        {% endif %}
+      </p>
+      <input type="submit" value="Hae" />
+    </form>
+
+    <hr />
+
+    {% if query %}
+    <h2>Tulokset</h2>
+    {% if results %}
+    <ul>
+      {% for result in results %}
+      <li>
+        <a href="/post/{{ result.post_id }}{% if result.comment_id %}#{{ result.comment_id }}{% endif %}">{{ result.post_title }}</a>
+        {% if result.type == 'comment' %}
+        <br />
+        Kommentti - {{ result.username }} ({{ result.sent_at }})
+        {% else %}
+        <br />
+        Julkaisu - {{ result.username }}
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>Ei tuloksia.</p>
+    {% endif %} {% else %} {% for post in posts %}
     <p>
       <a href="/post/{{ post.id }}#{{post.id}}">{{ post.title }}</a>
       <br />
       {{ post.total }} kommentteja
     </p>
     <hr />
-    {% endfor %}
+    {% endfor %} {% endif %}
   </body>
 </html>

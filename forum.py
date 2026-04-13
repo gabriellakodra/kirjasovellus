@@ -65,17 +65,33 @@ def remove_post(post_id):
 
 
 def search(query):
-    sql = """SELECT c.id comment_id,
-                    c.post_id,
-                    p.title post_title,
-                    c.sent_at,
-                    u.username
-             FROM posts p, comments c, users u
-             WHERE p.id = c.post_id AND
-                   u.id = c.user_id AND
-                   c.content LIKE ?
-             ORDER BY c.sent_at DESC"""
-    return db.query(sql, ["%" + query + "%"])
+    sql = """
+    SELECT c.id comment_id,
+           c.post_id,
+           p.title post_title,
+           c.sent_at,
+           u.username,
+           'comment' as type
+    FROM posts p, comments c, users u
+    WHERE p.id = c.post_id AND
+          u.id = c.user_id AND
+          c.content LIKE ?
+    
+    UNION
+    
+    SELECT NULL comment_id,
+           p.id post_id,
+           p.title post_title,
+           NULL sent_at,
+           u.username,
+           'post' as type
+    FROM posts p, users u
+    WHERE p.user_id = u.id AND
+          (p.title LIKE ? OR p.content LIKE ?)
+    
+    ORDER BY post_id DESC
+    """
+    return db.query(sql, ["%" + query + "%", "%" + query + "%", "%" + query + "%"])
 
 
 def create_user(username, password_hash):
