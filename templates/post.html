@@ -19,8 +19,9 @@
 
     <hr />
     {% for comment in comments %}
-    <p id="{{ comment.id }}">{{ comment.username }} {{ comment.sent_at }}:</p>
+    <p id="{{ comment.id }}">{{ comment.username }} {{ comment.sent_at }}</p>
     <p>{{ comment.content }}</p>
+
     {% if comment.user_id == session.user_id %}
     <p>
       <a href="/edit/{{ comment.id }}">Muokkaa</a> |

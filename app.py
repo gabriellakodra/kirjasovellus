@@ -103,7 +103,6 @@ def new_comment():
     post = forum.get_post(post_id)
     if not post:
         abort(404)
-    forum.add_comment(content, user_id, post_id)
 
     try:
         forum.add_comment(content, user_id, post_id)
