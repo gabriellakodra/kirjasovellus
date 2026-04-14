@@ -1,6 +1,6 @@
 from flask import Flask, abort
 from flask import redirect, render_template, request, session
-import config, db, forum
+import config, db, forum, users
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -16,7 +16,9 @@ def index():
         return render_template("index.html", query=query, results=results, posts=None)
     posts = forum.get_posts()
     count = len(posts)
-    return render_template("index.html", count=count, posts=posts, query=None, results=[])
+    return render_template(
+        "index.html", count=count, posts=posts, query=None, results=[]
+    )
 
 
 @app.route("/register")
@@ -51,7 +53,7 @@ def login():
     user = forum.get_user(username)
     if not user:
         return "VIRHE: väärä tunnus tai salasana"
-    
+
     user_id = user[0]
     password_hash = user[1]
 
@@ -201,10 +203,12 @@ def search():
     results = forum.search(query) if query else []
     return render_template("search.html", query=query, results=results)
 
+
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
     user = users.get_user(user_id)
     if not user:
         abort(404)
-    messages = users.get_messages(user_id)
-    return render_template("user.html", user=user, messages=messages)
+    posts = users.get_posts(user_id)
+    comments = users.get_comments(user_id)
+    return render_template("user.html", user=user, posts=posts, comments=comments)

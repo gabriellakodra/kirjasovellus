@@ -18,7 +18,7 @@ def get_post(post_id):
 
 
 def get_comments(post_id):
-    sql = """SELECT c.id, c.content, c.sent_at, c.user_id, u.username
+    sql = """SELECT c.id, c.content, c.sent_at, c.user_id, u.username, u.id user_id
              FROM comments c, users u
              WHERE c.user_id = u.id AND c.post_id = ?
              ORDER BY c.id"""
@@ -75,6 +75,7 @@ def search(query):
            p.title post_title,
            c.sent_at,
            u.username,
+           u.id user_id,
            'comment' as type
     FROM posts p, comments c, users u
     WHERE p.id = c.post_id AND
@@ -88,6 +89,7 @@ def search(query):
            p.title post_title,
            NULL sent_at,
            u.username,
+           u.id user_id,
            'post' as type
     FROM posts p, users u
     WHERE p.user_id = u.id AND
