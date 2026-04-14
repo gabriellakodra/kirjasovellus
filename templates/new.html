@@ -16,9 +16,22 @@
         <input type="text" name="title" maxlength="100" required />
       </p>
       <p>
-        Julkaisu: <br />
+        Arvio: <br />
         <textarea name="content" rows="5" cols="40" maxlength="5000" required></textarea>
       </p>
+      {% if all_classes %}
+      {% for class in all_classes %}
+      <p>
+        <label for="class{{ class }}">{{ class }}</label>: <br />
+        <select name="class_{{ class }}" id="class{{ class }}">
+          <option value="">(valitse)</option>
+          {% for option in all_classes[class] %}
+          <option value="{{ option }}">{{ option }}</option>
+          {% endfor %}
+        </select>
+      </p>
+      {% endfor %}
+      {% endif %}
       <p>
         <input type="submit" value="Lähetä" />
       </p>

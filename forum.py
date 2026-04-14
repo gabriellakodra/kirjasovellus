@@ -64,6 +64,10 @@ def update_post(post_id, title, content):
 
 
 def remove_post(post_id):
+    sql = "DELETE FROM post_classes WHERE post_id = ?"
+    db.execute(sql, [post_id])
+    sql = "DELETE FROM comments WHERE post_id = ?"
+    db.execute(sql, [post_id])
     sql = "DELETE FROM posts WHERE id = ?"
     db.execute(sql, [post_id])
 
@@ -113,3 +117,38 @@ def get_user(username):
     sql = "SELECT id, password_hash FROM users WHERE username = ?"
     result = db.query(sql, [username])
     return result[0] if result else None
+
+
+def get_all_classes():
+    sql = "SELECT title, value FROM classes ORDER BY id"
+    result = db.query(sql)
+
+    classes = {}
+    for title, value in result:
+        classes[title] = []
+    for title, value in result:
+        classes[title].append(value)
+
+    return classes
+
+
+def get_classes(post_id):
+    sql = "SELECT title, value FROM post_classes WHERE post_id = ?"
+    return db.query(sql, [post_id])
+
+
+def add_post_classes(post_id, classes_dict):
+    """Save selected classes for a post"""
+    for title, value in classes_dict.items():
+        if value:
+            sql = "INSERT INTO post_classes (post_id, title, value) VALUES (?, ?, ?)"
+            db.execute(sql, [post_id, title, value])
+
+
+def update_post_classes(post_id, classes_dict):
+    """Update classes for a post"""
+    # Delete existing classes
+    sql = "DELETE FROM post_classes WHERE post_id = ?"
+    db.execute(sql, [post_id])
+    # Add new classes
+    add_post_classes(post_id, classes_dict)
