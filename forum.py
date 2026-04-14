@@ -41,7 +41,11 @@ def add_post(title, content, user_id):
 def add_comment(content, user_id, post_id):
     sql = """INSERT INTO comments (content, sent_at, user_id, post_id) VALUES
              (?, datetime('now'), ?, ?)"""
-    db.execute(sql, [content, user_id, post_id])
+    try:
+        db.execute(sql, [content, user_id, post_id])
+        return None
+    except sqlite3.IntegrityError:
+        return "VIRHE: kommentin lisääminen epäonnistui"
 
 
 def update_comment(comment_id, content):
@@ -101,3 +105,9 @@ def create_user(username, password_hash):
         return None
     except sqlite3.IntegrityError:
         return "VIRHE: tunnus on jo varattu"
+
+
+def get_user(username):
+    sql = "SELECT id, password_hash FROM users WHERE username = ?"
+    result = db.query(sql, [username])
+    return result[0] if result else None

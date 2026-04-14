@@ -48,10 +48,12 @@ def login():
     username = request.form["username"]
     password = request.form["password"]
 
-    sql = "SELECT id, password_hash FROM users WHERE username = ?"
-    result = db.query(sql, [username])[0]
-    user_id = result[0]
-    password_hash = result[1]
+    user = forum.get_user(username)
+    if not user:
+        return "VIRHE: väärä tunnus tai salasana"
+    
+    user_id = user[0]
+    password_hash = user[1]
 
     if check_password_hash(password_hash, password):
         session["user_id"] = user_id
@@ -106,10 +108,9 @@ def new_comment():
     if not post:
         abort(404)
 
-    try:
-        forum.add_comment(content, user_id, post_id)
-    except sqlite3.IntegrityError:
-        abort(403)
+    error = forum.add_comment(content, user_id, post_id)
+    if error:
+        return error
     return redirect("/post/" + str(post_id))
 
 
@@ -199,3 +200,11 @@ def search():
     query = request.args.get("query")
     results = forum.search(query) if query else []
     return render_template("search.html", query=query, results=results)
+
+@app.route("/user/<int:user_id>")
+def show_user(user_id):
+    user = users.get_user(user_id)
+    if not user:
+        abort(404)
+    messages = users.get_messages(user_id)
+    return render_template("user.html", user=user, messages=messages)
