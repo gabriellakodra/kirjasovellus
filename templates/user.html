@@ -8,7 +8,22 @@
     <p>
       <a href="/">Etusivu</a>
     </p>
-    <h1>Käyttäjä: {{ user.username }}</h1>
+    <h1>Käyttäjä {{ user.username }}</h1>
+
+    {% if user.has_image %}
+    <img src="/image/{{ user.id }}" />
+    {% endif %} {% if user.id == session.user_id %}
+    <p>
+      {% if user.has_image %}
+      <a href="/add_image">Vaihda profiilikuva</a>
+    </p>
+    {% endif %}
+
+    <p>
+      {% if not user.has_image %}
+      <a href="/add_image">Lisää profiilikuva</a>
+    </p>
+    {% endif %} {% endif %}
 
     <h2>Julkaisut</h2>
     {% if posts %}
