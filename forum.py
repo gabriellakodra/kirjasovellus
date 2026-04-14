@@ -99,9 +99,21 @@ def search(query):
     WHERE p.user_id = u.id AND
           (p.title LIKE ? OR p.content LIKE ?)
     
-    ORDER BY post_id DESC
+    UNION
+    
+    SELECT NULL comment_id,
+           NULL post_id,
+           u.username post_title,
+           NULL sent_at,
+           u.username,
+           u.id user_id,
+           'user' as type
+    FROM users u
+    WHERE u.username LIKE ?
+    
+    ORDER BY post_id DESC, user_id DESC
     """
-    return db.query(sql, ["%" + query + "%", "%" + query + "%", "%" + query + "%"])
+    return db.query(sql, ["%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%"])
 
 
 def create_user(username, password_hash):
@@ -147,8 +159,6 @@ def add_post_classes(post_id, classes_dict):
 
 def update_post_classes(post_id, classes_dict):
     """Update classes for a post"""
-    # Delete existing classes
     sql = "DELETE FROM post_classes WHERE post_id = ?"
     db.execute(sql, [post_id])
-    # Add new classes
     add_post_classes(post_id, classes_dict)
