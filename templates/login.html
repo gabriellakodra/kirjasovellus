@@ -1,14 +1,9 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Kirjautuminen</title>
-  </head>
+{% extends "layout.html" %}
 
-  <body>
+{% block title %}Kirjautuminen{% endblock %}
+
+{% block content %}
     <h1>Kirjautuminen</h1>
-    <p>
-      <a href="/">Etusivu</a>
-    </p>
     <form action="/login" method="post">
       <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
 
@@ -34,5 +29,4 @@
 
       <input type="submit" value="Kirjaudu" />
     </form>
-  </body>
-</html>
+{% endblock %}

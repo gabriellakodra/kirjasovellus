@@ -1,21 +1,11 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Julkaisut</title>
-  </head>
+{% extends "layout.html" %}
 
-  <body>
+{% block title %}Julkaisut{% endblock %}
+
+{% block content %}
     {% if not query %}
     <h1>Julkaisut: {{ count }}</h1>
     {% endif %}
-
-    <p>
-      <a href="/">Etusivu</a> | {% if not session.user_id %}<a href="/register">Luo tunnus</a> | {%
-      endif %}{% if session.user_id %}<a href="/logout">Kirjaudu ulos</a> |
-      <a href="/new">Tee uusi julkaisu</a>{% else %}<a href="/login">Kirjaudu sisään</a>{% endif %}
-    </p>
-
-    <hr />
 
     <form action="/" method="get">
       <p>
@@ -71,5 +61,4 @@
       <a href="/{{ page + 1 }}">&gt;&gt;</a>
     </p>
     <hr />
-  </body>
-</html>
+{% endblock %}

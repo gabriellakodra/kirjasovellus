@@ -1,13 +1,8 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Julkaisun lähetys</title>
-  </head>
+{% extends "layout.html" %}
 
-  <body>
-    <p>
-      <a href="/">Etusivu</a>
-    </p>
+{% block title %}Julkaisun lähetys{% endblock %}
+
+{% block content %}
     <h1>Uusi julkaisu:</h1>
     {% if session.user_id %}
     <form action="/send" method="post">
@@ -38,5 +33,4 @@
       </p>
     </form>
     {% endif %}
-  </body>
-</html>
+{% endblock %}

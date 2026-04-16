@@ -1,13 +1,8 @@
-<!doctype html>
-<html>
-  <p>
-    <a href="/">Etusivu</a>
-  </p>
-  <head>
-    <title>{{ post.title }}</title>
-  </head>
+{% extends "layout.html" %}
 
-  <body>
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
     <h1>{{ post.title }}</h1>
     <p>{{ post.content | show_lines }}</p>
 
@@ -54,5 +49,4 @@
     {% else %}
     <p><a href="/login">Kirjaudu sisään</a> kommentoidaksesi.</p>
     {% endif %}
-  </body>
-</html>
+{% endblock %}

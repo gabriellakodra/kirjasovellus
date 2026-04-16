@@ -1,10 +1,8 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Haku</title>
-  </head>
+{% extends "layout.html" %}
 
-  <body>
+{% block title %}Haku{% endblock %}
+
+{% block content %}
     <h1>Haku</h1>
 
     <form action="/search" method="get">
@@ -32,5 +30,4 @@
       {% endfor %}
     </ul>
     {% endif %}
-  </body>
-</html>
+{% endblock %}

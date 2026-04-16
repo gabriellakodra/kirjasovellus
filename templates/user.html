@@ -1,13 +1,8 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Käyttäjä {{ user.username }}</title>
-  </head>
+{% extends "layout.html" %}
 
-  <body>
-    <p>
-      <a href="/">Etusivu</a>
-    </p>
+{% block title %}Käyttäjä {{ user.username }}{% endblock %}
+
+{% block content %}
     <h1>Käyttäjä {{ user.username }}</h1>
 
     {% for message in get_flashed_messages() %}
@@ -58,5 +53,4 @@
     {% else %}
     <p>Käyttäjällä ei ole kommentteja.</p>
     {% endif %}
-  </body>
-</html>
+{% endblock %}

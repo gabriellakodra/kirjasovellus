@@ -1,10 +1,8 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Lisää profiilikuva</title>
-  </head>
+{% extends "layout.html" %}
 
-  <body>
+{% block title %}Lisää profiilikuva{% endblock %}
+
+{% block content %}
     <h1>Lisää profiilikuva</h1>
 
     <p>Lähetä jpg-tiedosto, jonka koko on enintään 100 kt</p>
@@ -20,5 +18,4 @@
       <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
       <input type="submit" value="Lähetä" />
     </form>
-  </body>
-</html>
+{% endblock %}

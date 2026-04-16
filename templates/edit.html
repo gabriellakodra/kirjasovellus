@@ -1,8 +1,9 @@
-<h2>{% if post %}Julkaisun muokkaus{% else %}Kommentin muokkaus{% endif %}</h2>
+{% extends "layout.html" %}
 
-<p>
-  <a href="/">Etusivu</a>
-</p>
+{% block title %}{% if post %}Julkaisun muokkaus{% else %}Kommentin muokkaus{% endif %}{% endblock %}
+
+{% block content %}
+<h2>{% if post %}Julkaisun muokkaus{% else %}Kommentin muokkaus{% endif %}</h2>
 
 {% if post %}
 <form action="/edit_post/{{ post.id }}" method="post">
@@ -48,3 +49,4 @@
   <input type="submit" value="Lähetä" />
 </form>
 {% endif %}
+{% endblock %}

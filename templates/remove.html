@@ -1,8 +1,8 @@
-<p>
-  <a href="/">Etusivu</a>
-</p>
+{% extends "layout.html" %}
 
-{% if post %}
+{% block title %}Poistamisen vahvistus{% endblock %}
+
+{% block content %}
 <form action="/remove_post/{{ post.id }}" method="post">
   <p>Haluatko varmasti poistaa julkaisun?</p>
   <input type="submit" name="continue" value="Jatka" />
@@ -15,3 +15,4 @@
   <input type="submit" name="cancel" value="Peruuta" />
 </form>
 {% endif %}
+{% endblock %}

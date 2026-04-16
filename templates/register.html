@@ -1,13 +1,8 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Rekisteröinti</title>
-  </head>
+{% extends "layout.html" %}
 
-  <body>
-    <p>
-      <a href="/">Etusivu</a>
-    </p>
+{% block title %}Rekisteröinti{% endblock %}
+
+{% block content %}
     <form action="/register" method="post">
       <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
 
@@ -31,5 +26,4 @@
       </p>
       <input type="submit" value="Luo tunnus" />
     </form>
-  </body>
-</html>
+{% endblock %}
