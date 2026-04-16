@@ -1,5 +1,5 @@
 import secrets
-
+import markupsafe
 from flask import Flask, abort, flash
 from flask import redirect, render_template, request, session, make_response
 import config
@@ -356,3 +356,10 @@ def show_image(user_id):
     response = make_response(bytes(image))
     response.headers.set("Content-Type", "image/jpeg")
     return response
+
+
+@app.template_filter()
+def show_lines(content):
+    content = str(markupsafe.escape(content))
+    content = content.replace("\n", "<br />")
+    return markupsafe.Markup(content)

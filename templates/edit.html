@@ -12,9 +12,11 @@
   </p>
   <p>
     Julkaisu:<br />
-    <textarea name="content" rows="5" cols="40" maxlength="5000">{{ post.content }}</textarea>
+    <textarea name="content" rows="5" cols="40" maxlength="5000">
+{{ post.content | show_lines }}</textarea
+    >
   </p>
-  
+
   {% if all_classes %}
   <h3>Luokitukset</h3>
   {% for class in all_classes %}
@@ -23,20 +25,23 @@
     <select name="class_{{ class }}" id="class{{ class }}">
       <option value="">(valitse)</option>
       {% for option in all_classes[class] %}
-      <option value="{{ option }}" {% if classes[class] == option %}selected{% endif %}>{{ option }}</option>
+      <option value="{{ option }}" {% if classes[class]="" ="option" %}selected{% endif %}>
+        {{ option }}
+      </option>
       {% endfor %}
     </select>
   </p>
-  {% endfor %}
-  {% endif %}
-  
+  {% endfor %} {% endif %}
+
   <input type="submit" value="Lähetä" />
 </form>
 {% else %}
 <form action="/edit/{{ comment.id }}" method="post">
   <p>
     Kommentti:<br />
-    <textarea name="content" rows="5" cols="40" maxlength="5000">{{ comment.content }}</textarea>
+    <textarea name="content" rows="5" cols="40" maxlength="5000">
+{{ comment.content | show_lines }}</textarea
+    >
   </p>
   <input type="submit" value="Lähetä" />
 </form>
