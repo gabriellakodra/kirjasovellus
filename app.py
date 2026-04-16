@@ -1,3 +1,5 @@
+import secrets
+
 from flask import Flask, abort
 from flask import redirect, render_template, request, session, make_response
 import config
@@ -9,13 +11,25 @@ app = Flask(__name__)
 app.secret_key = config.secret_key
 
 
+def require_login():
+    if "user_id" not in session:
+        abort(403)
+
+
+def check_csrf():
+    if request.form["csrf_token"] != session["csrf_token"]:
+        abort(403)
+
+
 @app.route("/")
 @app.route("/<int:page>")
 def index(page=1):
     query = request.args.get("query")
     if query:
         results = forum.search(query)
-        return render_template("index.html", query=query, results=results, posts=None)
+        return render_template(
+            "index.html", query=query, results=results, posts=None, page=1, page_count=1
+        )
     page_size = 10
     post_count = forum.get_post_count()
     page_count = math.ceil(post_count / page_size)
@@ -40,11 +54,16 @@ def index(page=1):
 
 @app.route("/register")
 def register():
-    return render_template("register.html")
+    csrf_token = session.get("csrf_token")
+    if not csrf_token:
+        session["csrf_token"] = secrets.token_hex(16)
+        csrf_token = session["csrf_token"]
+    return render_template("register.html", csrf_token=csrf_token)
 
 
 @app.route("/create", methods=["POST"])
 def create():
+    check_csrf()
     username = request.form["username"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
@@ -62,8 +81,13 @@ def create():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
-        return render_template("login.html")
+        csrf_token = session.get("csrf_token")
+        if not csrf_token:
+            session["csrf_token"] = secrets.token_hex(16)
+            csrf_token = session["csrf_token"]
+        return render_template("login.html", csrf_token=csrf_token)
 
+    check_csrf()
     username = request.form["username"]
     password = request.form["password"]
 
@@ -76,6 +100,7 @@ def login():
 
     if check_password_hash(password_hash, password):
         session["user_id"] = user_id
+        session["csrf_token"] = secrets.token_hex(16)
         return redirect("/")
     else:
         return "VIRHE: väärä tunnus tai salasana"
@@ -90,13 +115,15 @@ def logout():
 @app.route("/new")
 def new():
     require_login()
+    csrf_token = session.get("csrf_token")
     all_classes = forum.get_all_classes()
-    return render_template("new.html", all_classes=all_classes)
+    return render_template("new.html", all_classes=all_classes, csrf_token=csrf_token)
 
 
 @app.route("/send", methods=["POST"])
 def send():
     require_login()
+    check_csrf()
     title = request.form["title"]
     content = request.form["content"]
     if not title or len(title) > 100 or len(content) > 5000:
@@ -128,6 +155,7 @@ def show_post(post_id):
 
 @app.route("/new_comment", methods=["POST"])
 def new_comment():
+    check_csrf()
     require_login()
 
     content = request.form["content"]
@@ -156,6 +184,7 @@ def edit_comment(comment_id):
         return render_template("edit.html", comment=comment)
 
     if request.method == "POST":
+        check_csrf()
         content = request.form["content"]
         forum.update_comment(comment_id, content)
         return redirect("/post/" + str(comment["post_id"]))
@@ -173,6 +202,7 @@ def remove_comment(comment_id):
         return render_template("remove.html", comment=comment)
 
     if request.method == "POST":
+        check_csrf()
         if "continue" in request.form:
             forum.remove_comment(comment["id"])
         return redirect("/post/" + str(comment["post_id"]))
@@ -201,6 +231,7 @@ def edit_post(post_id):
         )
 
     if request.method == "POST":
+        check_csrf()
         title = request.form["title"]
         content = request.form["content"]
         if not title or len(title) > 100 or len(content) > 5000:
@@ -232,15 +263,11 @@ def remove_post(post_id):
         return render_template("remove.html", post=post)
 
     if request.method == "POST":
+        check_csrf()
         if "continue" in request.form:
             forum.remove_post(post_id)
             return redirect("/")
         return redirect("/post/" + str(post_id))
-
-
-def require_login():
-    if "user_id" not in session:
-        abort(403)
 
 
 @app.route("/search")
@@ -268,6 +295,8 @@ def add_image():
         return render_template("add_image.html")
 
     if request.method == "POST":
+        check_csrf()
+
         file = request.files["image"]
         if not file.filename.endswith(".jpg"):
             return "VIRHE: väärä tiedostomuoto"

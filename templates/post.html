@@ -10,19 +10,15 @@
   <body>
     <h1>{{ post.title }}</h1>
     <p>{{ post.content }}</p>
-    
+
     {% if classes %}
     <div class="post-classes">
       <strong>Luokitukset:</strong><br />
       {% for class in classes %}
-      <span class="class-tag">
-        <strong>{{ class.title }}:</strong> {{ class.value }}
-      </span>
+      <span class="class-tag"> <strong>{{ class.title }}:</strong> {{ class.value }} </span>
       {% endfor %}
     </div>
-    {% endif %}
-    
-    {% if post.user_id == session.user_id %}
+    {% endif %} {% if post.user_id == session.user_id %}
     <p>
       <a href="/edit_post/{{ post.id }}">Muokkaa</a> |
       <a href="/remove_post/{{ post.id }}">Poista</a>
@@ -31,7 +27,9 @@
 
     <hr />
     {% for comment in comments %}
-    <p id="{{ comment.id }}"><a href="/user/{{ comment.user_id }}">{{ comment.username }}</a> {{ comment.sent_at }}</p>
+    <p id="{{ comment.id }}">
+      <a href="/user/{{ comment.user_id }}">{{ comment.username }}</a> {{ comment.sent_at }}
+    </p>
     <p>{{ comment.content }}</p>
 
     {% if comment.user_id == session.user_id %}
@@ -49,6 +47,7 @@
         <textarea name="content" rows="5" cols="40" maxlength="2000"></textarea>
       </p>
       <input type="hidden" name="post_id" value="{{ post.id }}" />
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
       <input type="submit" value="Lähetä" />
     </form>
     <hr />
