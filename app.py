@@ -1,6 +1,6 @@
 import secrets
 
-from flask import Flask, abort
+from flask import Flask, abort, flash
 from flask import redirect, render_template, request, session, make_response
 import config
 import forum, users
@@ -68,7 +68,8 @@ def create():
     password1 = request.form["password1"]
     password2 = request.form["password2"]
     if password1 != password2:
-        return "VIRHE: salasanat eivät ole samat"
+        flash("VIRHE: salasanat eivät ole samat")
+        return redirect("/register")
     password_hash = generate_password_hash(password1)
 
     error = forum.create_user(username, password_hash)
@@ -93,7 +94,8 @@ def login():
 
     user = forum.get_user(username)
     if not user:
-        return "VIRHE: väärä tunnus tai salasana"
+        flash("VIRHE: Väärä tunnus tai salasana")
+        return redirect("/login")
 
     user_id = user[0]
     password_hash = user[1]
@@ -103,7 +105,8 @@ def login():
         session["csrf_token"] = secrets.token_hex(16)
         return redirect("/")
     else:
-        return "VIRHE: väärä tunnus tai salasana"
+        flash("VIRHE: Väärä tunnus tai salasana")
+        return redirect("/login")
 
 
 @app.route("/logout")
@@ -299,14 +302,17 @@ def add_image():
 
         file = request.files["image"]
         if not file.filename.endswith(".jpg"):
-            return "VIRHE: väärä tiedostomuoto"
+            flash("VIRHE: vain jpg-kuvat sallitaan")
+            return redirect("/add_image")
 
         image = file.read()
         if len(image) > 100 * 1024:
-            return "VIRHE: liian suuri kuva"
+            flash("VIRHE: kuva saa olla enintään 100 kilotavua")
+            return redirect("/add_image")
 
         user_id = session["user_id"]
         users.update_image(user_id, image)
+        flash("Kuvan lisäys onnistui")
         return redirect("/user/" + str(user_id))
 
 

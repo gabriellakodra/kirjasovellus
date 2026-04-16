@@ -9,7 +9,14 @@
       <a href="/">Etusivu</a>
     </p>
     <form action="/create" method="post">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+
+      <p>Onko sinulla jo tunnus? <a href="/login">Kirjaudu tästä</a>.</p>
+      {% for message in get_flashed_messages() %}
+      <p>
+        <b>{{ message }}</b>
+      </p>
+      {% endfor %}
       <p>
         Tunnus: <br />
         <input type="text" name="username" />
