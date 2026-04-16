@@ -1,6 +1,7 @@
 from flask import Flask, abort
 from flask import redirect, render_template, request, session, make_response
-import config, db, forum, users
+import config
+import forum, users
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -87,7 +88,6 @@ def send():
     user_id = session.get("user_id")
 
     post_id = forum.add_post(title, content, user_id)
-    
 
     all_classes = forum.get_all_classes()
     classes_to_save = {}
@@ -95,7 +95,6 @@ def send():
         value = request.form.get(f"class_{class_title}")
         if value:
             classes_to_save[class_title] = value
-    
     forum.add_post_classes(post_id, classes_to_save)
     return redirect("/post/" + str(post_id))
 
@@ -191,15 +190,14 @@ def edit_post(post_id):
         if not title or len(title) > 100 or len(content) > 5000:
             abort(403)
         forum.update_post(post_id, title, content)
-        
-        # Update classes
+
         all_classes = forum.get_all_classes()
         classes_to_save = {}
         for class_title in all_classes:
             value = request.form.get(f"class_{class_title}")
             if value:
                 classes_to_save[class_title] = value
-        
+
         forum.update_post_classes(post_id, classes_to_save)
         return redirect("/post/" + str(post_id))
 

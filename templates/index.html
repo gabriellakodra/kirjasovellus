@@ -39,8 +39,7 @@
         {% if result.type == 'user' %}
         <a href="/user/{{ result.user_id }}">{{ result.username }}</a>
         <br />
-        Käyttäjä
-        {% else %}
+        Käyttäjä {% else %}
         <a
           href="/post/{{ result.post_id }}{% if result.comment_id %}#{{ result.comment_id }}{% endif %}"
           >{{ result.post_title }}</a
@@ -48,12 +47,10 @@
         {% if result.type == 'comment' %}
         <br />
         Kommentti - <a href="/user/{{ result.user_id }}">{{ result.username }}</a> ({{
-        result.sent_at }})
-        {% else %}
+        result.sent_at }}) {% else %}
         <br />
         Julkaisu - <a href="/user/{{ result.user_id }}">{{ result.username }}</a>
-        {% endif %}
-        {% endif %}
+        {% endif %} {% endif %}
       </li>
       {% endfor %}
     </ul>

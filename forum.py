@@ -113,7 +113,10 @@ def search(query):
     
     ORDER BY post_id DESC, user_id DESC
     """
-    return db.query(sql, ["%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%"])
+    return db.query(
+        sql,
+        ["%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%"],
+    )
 
 
 def create_user(username, password_hash):
