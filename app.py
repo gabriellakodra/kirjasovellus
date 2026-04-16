@@ -215,7 +215,11 @@ def edit_comment(comment_id):
         abort(403)
 
     if request.method == "GET":
-        return render_template("edit.html", comment=comment)
+        csrf_token = session.get("csrf_token")
+        if not csrf_token:
+            session["csrf_token"] = secrets.token_hex(16)
+            csrf_token = session["csrf_token"]
+        return render_template("edit.html", comment=comment, csrf_token=csrf_token)
 
     if request.method == "POST":
         check_csrf()
@@ -259,9 +263,12 @@ def edit_post(post_id):
     for entry in forum.get_classes(post_id):
         classes[entry["title"]] = entry["value"]
     if request.method == "GET":
-
+        csrf_token = session.get("csrf_token")
+        if not csrf_token:
+            session["csrf_token"] = secrets.token_hex(16)
+            csrf_token = session["csrf_token"]
         return render_template(
-            "edit.html", post=post, classes=classes, all_classes=all_classes
+            "edit.html", post=post, classes=classes, all_classes=all_classes, csrf_token=csrf_token
         )
 
     if request.method == "POST":

@@ -6,6 +6,7 @@
 
 {% if post %}
 <form action="/edit_post/{{ post.id }}" method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
   <p>
     Otsikko:<br />
     <input type="text" name="title" maxlength="100" value="{{ post.title }}" />
@@ -13,7 +14,7 @@
   <p>
     Julkaisu:<br />
     <textarea name="content" rows="5" cols="40" maxlength="5000">
-{{ post.content | show_lines }}</textarea
+{{ post.content }}</textarea
     >
   </p>
 
@@ -25,7 +26,7 @@
     <select name="class_{{ class }}" id="class{{ class }}">
       <option value="">(valitse)</option>
       {% for option in all_classes[class] %}
-      <option value="{{ option }}" {% if classes[class]="" ="option" %}selected{% endif %}>
+      <option value="{{ option }}" {% if classes[class] == option %}selected{% endif %}>
         {{ option }}
       </option>
       {% endfor %}
@@ -37,10 +38,11 @@
 </form>
 {% else %}
 <form action="/edit/{{ comment.id }}" method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
   <p>
     Kommentti:<br />
     <textarea name="content" rows="5" cols="40" maxlength="5000">
-{{ comment.content | show_lines }}</textarea
+{{ comment.content }}</textarea
     >
   </p>
   <input type="submit" value="Lähetä" />

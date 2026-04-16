@@ -1,0 +1,14 @@
+{
+  "[html]": {
+    "editor.formatOnSave": false,
+    "editor.defaultFormatter": null
+  },
+  "[jinja-html]": {
+    "editor.formatOnSave": false,
+    "editor.defaultFormatter": null
+  },
+  "[jinja]": {
+    "editor.formatOnSave": false,
+    "editor.defaultFormatter": null
+  }
+}
