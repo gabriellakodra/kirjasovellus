@@ -52,31 +52,49 @@ def index(page=1):
     )
 
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    csrf_token = session.get("csrf_token")
-    if not csrf_token:
-        session["csrf_token"] = secrets.token_hex(16)
-        csrf_token = session["csrf_token"]
-    return render_template("register.html", csrf_token=csrf_token)
+    if request.method == "GET":
+        csrf_token = session.get("csrf_token")
+        if not csrf_token:
+            session["csrf_token"] = secrets.token_hex(16)
+            csrf_token = session["csrf_token"]
+        return render_template("register.html", csrf_token=csrf_token, filled={})
 
-
-@app.route("/create", methods=["POST"])
-def create():
     check_csrf()
     username = request.form["username"]
+    if len(username) > 16:
+        flash("VIRHE: Tunnus saa olla enintään 16 merkkiä")
+        filled = {"username": username}
+        return render_template("register.html", csrf_token=session["csrf_token"], filled=filled)
+    
     password1 = request.form["password1"]
     password2 = request.form["password2"]
-    if password1 != password2:
-        flash("VIRHE: salasanat eivät ole samat")
-        return redirect("/register")
-    password_hash = generate_password_hash(password1)
 
+    if len(password1) < 6:
+        flash("VIRHE: Salasana pitää olla vähintään 6 merkkiä")
+        filled = {"username": username}
+        return render_template("register.html", csrf_token=session["csrf_token"], filled=filled)
+
+    if len(password1) > 16:
+        flash("VIRHE: Salasana saa olla enintään 16 merkkiä")
+        filled = {"username": username}
+        return render_template("register.html", csrf_token=session["csrf_token"], filled=filled)
+
+    if password1 != password2:
+        flash("VIRHE: Antamasi salasanat eivät ole samat")
+        filled = {"username": username}
+        return render_template("register.html", csrf_token=session["csrf_token"], filled=filled)
+
+    password_hash = generate_password_hash(password1)
     error = forum.create_user(username, password_hash)
     if error:
-        return error
-
-    return "Tunnus luotu"
+        flash(error)
+        filled = {"username": username}
+        return render_template("register.html", csrf_token=session["csrf_token"], filled=filled)
+    
+    flash("Tunnuksen luominen onnistui, voit nyt kirjautua sisään")
+    return redirect("/login")
 
 
 @app.route("/login", methods=["GET", "POST"])

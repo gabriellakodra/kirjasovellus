@@ -134,7 +134,7 @@ def create_user(username, password_hash):
         db.execute(sql, [username, password_hash])
         return None
     except sqlite3.IntegrityError:
-        return "VIRHE: tunnus on jo varattu"
+        return "VIRHE: käyttäjätunnus on jo varattu"
 
 
 def get_user(username):
