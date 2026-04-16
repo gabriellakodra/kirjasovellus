@@ -66,33 +66,43 @@ def register():
     if len(username) > 16:
         flash("VIRHE: Tunnus saa olla enintään 16 merkkiä")
         filled = {"username": username}
-        return render_template("register.html", csrf_token=session["csrf_token"], filled=filled)
-    
+        return render_template(
+            "register.html", csrf_token=session["csrf_token"], filled=filled
+        )
+
     password1 = request.form["password1"]
     password2 = request.form["password2"]
 
     if len(password1) < 6:
         flash("VIRHE: Salasana pitää olla vähintään 6 merkkiä")
         filled = {"username": username}
-        return render_template("register.html", csrf_token=session["csrf_token"], filled=filled)
+        return render_template(
+            "register.html", csrf_token=session["csrf_token"], filled=filled
+        )
 
     if len(password1) > 16:
         flash("VIRHE: Salasana saa olla enintään 16 merkkiä")
         filled = {"username": username}
-        return render_template("register.html", csrf_token=session["csrf_token"], filled=filled)
+        return render_template(
+            "register.html", csrf_token=session["csrf_token"], filled=filled
+        )
 
     if password1 != password2:
         flash("VIRHE: Antamasi salasanat eivät ole samat")
         filled = {"username": username}
-        return render_template("register.html", csrf_token=session["csrf_token"], filled=filled)
+        return render_template(
+            "register.html", csrf_token=session["csrf_token"], filled=filled
+        )
 
     password_hash = generate_password_hash(password1)
     error = forum.create_user(username, password_hash)
     if error:
         flash(error)
         filled = {"username": username}
-        return render_template("register.html", csrf_token=session["csrf_token"], filled=filled)
-    
+        return render_template(
+            "register.html", csrf_token=session["csrf_token"], filled=filled
+        )
+
     flash("Tunnuksen luominen onnistui, voit nyt kirjautua sisään")
     return redirect("/login")
 
@@ -104,11 +114,14 @@ def login():
         if not csrf_token:
             session["csrf_token"] = secrets.token_hex(16)
             csrf_token = session["csrf_token"]
-        return render_template("login.html", csrf_token=csrf_token)
+        return render_template(
+            "login.html", csrf_token=csrf_token, next_page=request.referrer
+        )
 
     check_csrf()
     username = request.form["username"]
     password = request.form["password"]
+    next_page = request.form["next_page"]
 
     user = forum.get_user(username)
     if not user:
@@ -121,10 +134,10 @@ def login():
     if check_password_hash(password_hash, password):
         session["user_id"] = user_id
         session["csrf_token"] = secrets.token_hex(16)
-        return redirect("/")
+        return redirect(next_page)
     else:
         flash("VIRHE: Väärä tunnus tai salasana")
-        return redirect("/login")
+        return render_template("login.html", next_page=next_page)
 
 
 @app.route("/logout")
