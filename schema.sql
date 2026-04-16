@@ -32,3 +32,5 @@ CREATE TABLE post_classes (
     title TEXT,
     value TEXT
 );
+
+CREATE INDEX idx_post_comments ON comments (post_id);
