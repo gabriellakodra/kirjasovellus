@@ -2,19 +2,28 @@ import db
 import sqlite3
 
 
-def get_posts():
+def get_posts(page, page_size):
     sql = """SELECT p.id, p.title, COUNT(c.id) total, MAX(c.sent_at) last
-             FROM posts p
-             LEFT JOIN comments c ON p.id = c.post_id
+             FROM posts p, comments c
+             WHERE p.id = c.post_id
              GROUP BY p.id
-             ORDER BY p.id DESC"""
-    return db.query(sql)
+             ORDER BY p.id DESC
+             LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = page_size * (page - 1)
+    return db.query(sql, [limit, offset])
 
 
 def get_post(post_id):
     sql = "SELECT id, title, content, user_id FROM posts WHERE id = ?"
     result = db.query(sql, [post_id])
     return result[0] if result else None
+
+
+def get_post_count():
+    sql = "SELECT COUNT(*) FROM posts"
+    result = db.query(sql)
+    return result[0][0] if result else 0
 
 
 def get_comments(post_id):

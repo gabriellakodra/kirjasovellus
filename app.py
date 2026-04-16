@@ -3,22 +3,38 @@ from flask import redirect, render_template, request, session, make_response
 import config
 import forum, users
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import math
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
 
 @app.route("/")
-def index():
+@app.route("/<int:page>")
+def index(page=1):
     query = request.args.get("query")
     if query:
         results = forum.search(query)
         return render_template("index.html", query=query, results=results, posts=None)
-    posts = forum.get_posts()
+    page_size = 10
+    post_count = forum.get_post_count()
+    page_count = math.ceil(post_count / page_size)
+    page_count = max(page_count, 1)
+    if page < 1:
+        return redirect("/1")
+    if page > page_count:
+        return redirect("/" + str(page_count))
+
+    posts = forum.get_posts(page, page_size)
     count = len(posts)
     return render_template(
-        "index.html", count=count, posts=posts, query=None, results=[]
+        "index.html",
+        count=count,
+        posts=posts,
+        query=None,
+        results=[],
+        page=page,
+        page_count=page_count,
     )
 
 
