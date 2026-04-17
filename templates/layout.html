@@ -34,6 +34,11 @@
   <hr />
 
   <div class="content">
+    {% for message in get_flashed_messages() %}
+    <p class="info">
+      {{ message }}
+    </p>
+    {% endfor %}
     {% block content %}{% endblock %}
   </div>
 

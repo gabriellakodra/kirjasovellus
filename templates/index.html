@@ -4,12 +4,6 @@
 
 {% block content %}
     
-{% for message in get_flashed_messages() %}
-<p class="info">
-  {{ message }}
-</p>
-{% endfor %}
-
     <form action="/" method="get">
       <p>
         Hakusana: {% if query %}

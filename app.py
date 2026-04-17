@@ -134,10 +134,15 @@ def login():
     if check_password_hash(password_hash, password):
         session["user_id"] = user_id
         session["csrf_token"] = secrets.token_hex(16)
-        return redirect(next_page)
+        flash("Kirjautuminen onnistui!")
+        return redirect("/")
     else:
         flash("VIRHE: Väärä tunnus tai salasana")
-        return render_template("login.html", next_page=next_page)
+        csrf_token = session.get("csrf_token")
+        if not csrf_token:
+            session["csrf_token"] = secrets.token_hex(16)
+            csrf_token = session["csrf_token"]
+        return render_template("login.html", csrf_token=csrf_token, next_page=next_page)
 
 
 @app.route("/logout")
