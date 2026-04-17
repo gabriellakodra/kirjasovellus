@@ -3,9 +3,12 @@
 {% block title %}Julkaisut{% endblock %}
 
 {% block content %}
-    {% if not query %}
-    <h1>Julkaisut: {{ count }}</h1>
-    {% endif %}
+    
+{% for message in get_flashed_messages() %}
+<p class="info">
+  {{ message }}
+</p>
+{% endfor %}
 
     <form action="/" method="get">
       <p>
@@ -47,11 +50,13 @@
     {% else %}
     <p>Ei tuloksia.</p>
     {% endif %} {% else %} {% for post in posts %}
+    <div class="post">
     <p>
       <a href="/post/{{ post.id }}#{{post.id}}">{{ post.title }}</a>
       <br />
       {{ post.total }} kommentteja
     </p>
+    </div>
     <hr />
     {% endfor %} {% endif %}
 

@@ -1,0 +1,58 @@
+body {
+  margin: auto;
+  max-width: 50em;
+  font-family: sans-serif;
+  background-color: #d7a5ab;
+}
+.header {
+  color: Black;
+  padding: 1em;
+}
+
+.nav {
+  background-color: #a7be9c;
+  padding: 0.5em;
+}
+
+.content {
+  background-color: #a7be9c;
+  padding: 1em;
+  margin: 0.5em 0;
+}
+
+.post {
+  border: 2px solid black;
+  margin: 1em;
+  padding: 0.2em 0.5em;
+}
+
+.info {
+  border: 2px solid black;
+  margin: 1em;
+  padding: 0.5em;
+  background-color: #ba5267;
+  color: white;
+}
+
+nav {
+  text-align: center;
+}
+
+nav ul {
+  padding: 0;
+  margin: 0;
+}
+
+nav li {
+  display: inline-block;
+  padding: 0 1em;
+  margin: 0;
+}
+
+nav li:not(:last-of-type) {
+  border-right: 1px solid black;
+}
+
+nav li:not(:first-of-type) {
+  margin-left: -0.25em;
+}
