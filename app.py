@@ -201,6 +201,9 @@ def new_comment():
     post_id = request.form["post_id"]
     user_id = session["user_id"]
 
+    if not content or len(content) > 5000:
+        abort(403)
+
     post = forum.get_post(post_id)
     if not post:
         abort(404)
@@ -229,6 +232,8 @@ def edit_comment(comment_id):
     if request.method == "POST":
         check_csrf()
         content = request.form["content"]
+        if not content or len(content) > 5000:
+            abort(403)
         forum.update_comment(comment_id, content)
         return redirect("/post/" + str(comment["post_id"]))
 
