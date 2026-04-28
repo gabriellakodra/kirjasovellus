@@ -1,14 +1,14 @@
 # Kirjasovellus
 
-Kirjojen arvostelu sovellus, jonne voi julkaista lukemiaan kirjoja nimellä ja antaa oma arvio / kommentoida muiden arvioita.
+Kirjojen arvostelu sovellus, jonne voi julkaista lukemiaan kirjoja nimellä ja antaa oma arvio sekä kommentoida muiden arvioita.
 
 ## Sovelluksen ominaisuuksia: 
 - sovellukseen luodaan käyttäjä ja kirjaudutaan sisään, jos haluaa tehdä julkaisun tai kommentin.
-- käyttäjä voi lisätä, poistaa ja muokata omia arvosteluja / kommentteja.
+- käyttäjä voi lisätä, poistaa ja muokata omia arvosteluja ja kommentteja.
 - käyttäjä voi tutkia omia ja muiden ihmisten lisäämiä arvosteluja ja kommentteja.
-- sovelluksessa voi hakusanalla hakea kirjoja, joita on arvosteltu.
+- sovelluksessa voi hakusanalla hakea julkaisuja ostikon, sisällön ja komenttien perusteella sekä etsiä käyttäjänimiä.
 - sovelluksessa voi tutkia omaa ja muiden ihmisten profiileja sekä heidän julkaisemia arvosteluja, jotka näkyvät siellä.
-- käyttäjä voi valita arvostelun kirjalle luokittelun esim. tietokirjallisuus vai kaunikirjallisuus.
+- käyttäjä voi halutessaan valita kirjalle luokaksi arvosanan 1-5 sekä ilmoittaa genren.
 - toissijaisena tietokohteena toimii muiden julkaisujen kommentointi.
   
 ## Sovelluksen asennus:
