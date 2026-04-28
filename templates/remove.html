@@ -3,13 +3,16 @@
 {% block title %}Poistamisen vahvistus{% endblock %}
 
 {% block content %}
+{% if post %}
 <form action="/remove_post/{{ post.id }}" method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
   <p>Haluatko varmasti poistaa julkaisun?</p>
   <input type="submit" name="continue" value="Jatka" />
   <input type="submit" name="cancel" value="Peruuta" />
 </form>
 {% else %}
 <form action="/remove/{{ comment.id }}" method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
   <p>Haluatko varmasti poistaa kommentin?</p>
   <input type="submit" name="continue" value="Jatka" />
   <input type="submit" name="cancel" value="Peruuta" />

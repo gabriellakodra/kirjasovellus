@@ -242,7 +242,11 @@ def remove_comment(comment_id):
         abort(403)
 
     if request.method == "GET":
-        return render_template("remove.html", comment=comment)
+        csrf_token = session.get("csrf_token")
+        if not csrf_token:
+            session["csrf_token"] = secrets.token_hex(16)
+            csrf_token = session["csrf_token"]
+        return render_template("remove.html", comment=comment, csrf_token=csrf_token)
 
     if request.method == "POST":
         check_csrf()
@@ -306,7 +310,11 @@ def remove_post(post_id):
         abort(403)
 
     if request.method == "GET":
-        return render_template("remove.html", post=post)
+        csrf_token = session.get("csrf_token")
+        if not csrf_token:
+            session["csrf_token"] = secrets.token_hex(16)
+            csrf_token = session["csrf_token"]
+        return render_template("remove.html", post=post, csrf_token=csrf_token)
 
     if request.method == "POST":
         check_csrf()
