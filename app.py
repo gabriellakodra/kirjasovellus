@@ -277,7 +277,11 @@ def edit_post(post_id):
             session["csrf_token"] = secrets.token_hex(16)
             csrf_token = session["csrf_token"]
         return render_template(
-            "edit.html", post=post, classes=classes, all_classes=all_classes, csrf_token=csrf_token
+            "edit.html",
+            post=post,
+            classes=classes,
+            all_classes=all_classes,
+            csrf_token=csrf_token,
         )
 
     if request.method == "POST":

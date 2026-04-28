@@ -10,7 +10,7 @@
       <b>{{ message }}</b>
     </p>
     {% endfor %} {% if user.has_image %}
-    <img src="/image/{{ user.id }}" />
+    <img src="/image/{{ user.id }}" width="200" />
     {% endif %} {% if user.id == session.user_id %}
     <p>
       {% if user.has_image %}
